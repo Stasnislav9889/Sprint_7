@@ -15,7 +15,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static constants.StatusCode.CREATED;
-import static helper.ApiHelper.createOrder;
+import static helper.ApiHelper.postCreateOrder;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static random.RandomData.getRandomOrder;
 
@@ -46,7 +46,7 @@ public class OrderCreationParameterizationTests {
         Order order = getRandomOrder();
         order.setColor(colorOptions);
 
-        var response = createOrder(order)
+        var response = postCreateOrder(order)
                 .then()
                 .statusCode(CREATED)
                 .extract()

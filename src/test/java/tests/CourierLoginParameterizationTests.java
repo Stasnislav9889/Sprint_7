@@ -1,5 +1,6 @@
 package tests;
 
+import base.BaseParameterizationTests;
 import io.qameta.allure.junit4.DisplayName;
 import models.Courier;
 import models.response.ErrorMessage;
@@ -12,14 +13,11 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import static constants.ApiResponseConstants.INVALID_LOGIN_OR_PASS;
-import static constants.StatusCode.*;
-import static helper.ApiHelper.authorizationCourier;
-import static helper.ApiHelper.createCourier;
-import static random.RandomData.getRandomCourier;
-import static random.RandomData.getRandomString;
+import static constants.StatusCode.BAD_REQUEST;
+import static helper.ApiHelper.postAuthorizationCourier;
 
 @RunWith(Parameterized.class)
-public class CourierLoginParameterizationTests {
+public class CourierLoginParameterizationTests extends BaseParameterizationTests {
 
     private String login;
     private String password;
@@ -31,9 +29,8 @@ public class CourierLoginParameterizationTests {
 
     @Parameterized.Parameters(name = "Тест: login={0}, password={1}")
     public static Collection<Object[]> invalidAuthorizationData() {
-        String login = createCourser().getLogin();
-        String password = createCourser().getPassword();
-        String randomString = getRandomString();
+        String login = courier.getLogin();
+        String password = courier.getPassword();
         return Arrays.asList(new Object[][]{
                 {null, password},
                 {"", password},
@@ -46,21 +43,13 @@ public class CourierLoginParameterizationTests {
     @Test
     @DisplayName("Проверка сообщения об ошибке при передаче пустых значений при авторизации")
     public void checkErrorMessageWhenAuthWithoutValues() {
-        Courier courier = new Courier(login, password);
-        var actualMessage = authorizationCourier(courier)
+        Courier testCourier = new Courier(login, password);
+        var actualMessage = postAuthorizationCourier(testCourier)
                 .then()
                 .statusCode(BAD_REQUEST)
                 .extract()
                 .body().as(ErrorMessage.class);
 
         Assert.assertEquals(INVALID_LOGIN_OR_PASS, actualMessage.getMessage());
-    }
-
-    public static Courier createCourser() {
-        Courier courier = getRandomCourier();
-        createCourier(getRandomCourier())
-                .then()
-                .statusCode(CREATED);
-        return courier;
     }
 }

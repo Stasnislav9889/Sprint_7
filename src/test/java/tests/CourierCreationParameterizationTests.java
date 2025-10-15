@@ -13,7 +13,7 @@ import java.util.Collection;
 
 import static constants.ApiResponseConstants.NOT_ENOUGH_DATA_CREATE_ACCOUNT;
 import static constants.StatusCode.BAD_REQUEST;
-import static helper.ApiHelper.createCourier;
+import static helper.ApiHelper.postCreateCourier;
 import static random.RandomData.getRandomString;
 
 @RunWith(Parameterized.class)
@@ -44,7 +44,7 @@ public class CourierCreationParameterizationTests {
     @DisplayName("Проверка сообщения при передаче пустых значений")
     public void checkErrorMessageWhenCreateWithoutValues() {
         Courier courier = new Courier(login, password);
-        var actualMessage = createCourier(courier)
+        var actualMessage = postCreateCourier(courier)
                 .then()
                 .statusCode(BAD_REQUEST)
                 .extract()

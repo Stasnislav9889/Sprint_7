@@ -2,7 +2,6 @@ package base;
 
 import models.Courier;
 import models.response.AuthorizationSuccessResponse;
-import models.response.CreateSuccessResponse;
 import org.junit.After;
 import org.junit.Before;
 
@@ -11,13 +10,12 @@ import static constants.StatusCode.OK;
 import static helper.ApiHelper.*;
 import static random.RandomData.getRandomCourier;
 
-public class BaseTests {
+public class BaseParameterizationTests {
 
-    protected Courier courier;
-    protected CreateSuccessResponse createSuccessResponse;
+    protected static Courier courier = getRandomCourier();
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         createCourier();
     }
 
@@ -27,15 +25,16 @@ public class BaseTests {
     }
 
     protected void createCourier() {
-        courier = getRandomCourier();
-        createSuccessResponse = postCreateCourier(courier).then()
-                .statusCode(CREATED)
-                .extract().body().as(CreateSuccessResponse.class);
+        postCreateCourier(courier).then()
+                .statusCode(CREATED);
     }
 
     protected void deleteCourierAfterTest() {
-        int idCourier = postAuthorizationCourier(courier).then().statusCode(OK)
+        deleteCourier(getCourierId()).then().statusCode(OK);
+    }
+
+    protected int getCourierId() {
+        return postAuthorizationCourier(courier).then().statusCode(OK)
                 .extract().as(AuthorizationSuccessResponse.class).getId();
-        deleteCourier(idCourier).then().statusCode(OK);
     }
 }

@@ -11,30 +11,42 @@ import static io.restassured.RestAssured.given;
 
 public final class ApiHelper extends BaseApiHelper {
 
+    private static final String CREATE_COURIER_API = "/api/v1/courier";
+    private static final String AUTHORIZATION_COURIER_API = "/api/v1/courier/login";
+    private static final String ORDER_API = "/api/v1/orders";
+    private static final String DELETE_COURIER_API = "/api/v1/courier";
+
     @Step("Создать курьера")
-    public static Response createCourier(Courier courier) {
+    public static Response postCreateCourier(Courier courier) {
         return given().contentType(ContentType.JSON)
                 .body(courier)
-                .post("/api/v1/courier");
+                .post(CREATE_COURIER_API);
     }
 
     @Step("Авторизоваться курьером")
-    public static Response authorizationCourier(Courier courier) {
+    public static Response postAuthorizationCourier(Courier courier) {
         return given().contentType(ContentType.JSON)
                 .body(courier)
-                .post("/api/v1/courier/login");
+                .post(AUTHORIZATION_COURIER_API);
     }
 
     @Step("Создать заказ")
-    public static Response createOrder(Order order){
+    public static Response postCreateOrder(Order order) {
         return given().contentType(ContentType.JSON)
                 .body(order)
-                .post("/api/v1/orders");
+                .post(ORDER_API);
     }
 
     @Step("Получить список заказов")
-    public static Response getOrdersList(){
+    public static Response getOrdersList() {
         return given().contentType(ContentType.JSON)
-                .get("/api/v1/orders");
+                .get(ORDER_API);
+    }
+
+    @Step("Удалить курьера")
+    public static Response deleteCourier(int courierId) {
+        return given().contentType(ContentType.JSON)
+                .pathParam("id", courierId)
+                .delete(DELETE_COURIER_API + "/{id}");
     }
 }

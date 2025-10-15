@@ -1,7 +1,10 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.util.Objects;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Courier {
 
     private String login;
@@ -28,6 +31,15 @@ public class Courier {
 
     public String getPassword() {
         return password;
+    }
+
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getLogin() {
